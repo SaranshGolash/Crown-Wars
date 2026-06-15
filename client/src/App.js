@@ -1,15 +1,11 @@
 import React from 'react';
 import './App.css';
+import Main from './pages/Main';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Chess Game with Buffs</h1>
-        <p>
-          Welcome to the development phase. Let's start building the next generation of chess!
-        </p>
-      </header>
+      <Main />
     </div>
   );
 }
