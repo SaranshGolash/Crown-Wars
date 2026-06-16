@@ -1,8 +1,10 @@
-function GameMenuList({menuItems, listStyle}) {
+import { useNavigate } from 'react-router-dom';
+
+function GameMenuList({menuItems, listStyle, handleMenuClick}) {
     return (
         <ul className="game-menu-list" style={listStyle}>
             {menuItems.map((item, index) => (
-                <li key={index} className="game-menu-item" style={{fontSize: '2.5rem', paddingBottom: '10px', cursor: 'pointer', width: 'fit-content', margin: '0 auto'}}>
+                <li key={index} className="game-menu-item" style={{fontSize: '2.5rem', paddingBottom: '10px', cursor: 'pointer', width: 'fit-content', margin: '0 auto'}} onClick={() => handleMenuClick(item)}>
                     {item}
                 </li>
             ))}
@@ -11,6 +13,13 @@ function GameMenuList({menuItems, listStyle}) {
 }
 
 function Main() {
+    const navigate = useNavigate();
+
+    const handleMenuClick = (item) => {
+        if (item === "New Game") {
+            navigate("/game");
+        }
+    };
 
     const menuItems = [
         "New Game",
@@ -69,7 +78,7 @@ function Main() {
                 <h1>Crown Wars</h1>
             </div>
             <div>
-                <GameMenuList menuItems={menuItems} listStyle={listStyle}/>
+                <GameMenuList menuItems={menuItems} listStyle={listStyle} handleMenuClick={handleMenuClick}/>
             </div>
         </div>
     );
