@@ -16,8 +16,14 @@ function Main() {
     const navigate = useNavigate();
 
     const handleMenuClick = (item) => {
-        if (item === "New Game") {
+        if(item === "New Game") {
             navigate("/game");
+        } else if(item === "How to Play") {
+            navigate("/how-to-play");
+        } else if(item === "Settings") {
+            navigate("/settings");
+        } else if(item === "Credits") {
+            navigate("/credits");
         }
     };
 
@@ -25,8 +31,7 @@ function Main() {
         "New Game",
         "How to Play",
         "Settings",
-        "Credits",
-        "Exit"
+        "Credits"
     ];
 
     const listStyle = {
