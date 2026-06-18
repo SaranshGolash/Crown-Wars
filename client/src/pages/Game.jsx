@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
 
 function Game() {
     const navigate = useNavigate();
@@ -58,9 +59,13 @@ function Game() {
         return true;
     }
 
-    function restartGame() {
+    const restartGame = () => {
         setGame(new Chess());
         setPlayerColor(Math.random() < 0.5 ? 'white' : 'black');
+    }
+
+    const handleBackToMenu = () => {
+        navigate('/');
     }
 
     const mainDivStyle = {
@@ -77,6 +82,15 @@ function Game() {
         marginBottom: '10px'
     };
 
+    const btnStyle = {
+        padding: '10px 20px',
+        fontSize: '1.2rem',
+        cursor: 'pointer',
+        marginRight: '10px',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '5px'
+    }
     return (
         <div style={mainDivStyle}>
             <h2 style={titleStyle}>Chess Game</h2>
@@ -94,12 +108,12 @@ function Game() {
                 />
             </div>
             <div style={{ marginTop: '30px' }}>
-                <button onClick={() => navigate('/')} style={{ padding: '10px 20px', fontSize: '1.2rem', cursor: 'pointer', marginRight: '10px', backgroundColor: '#333', color: '#fff', border: 'none', borderRadius: '5px' }}>
+                <Button onClick={handleBackToMenu} style={{...btnStyle, backgroundColor: '#333'}} className='back-to-menu'>
                     Back to Menu
-                </button>
-                <button onClick={restartGame} style={{ padding: '10px 20px', fontSize: '1.2rem', cursor: 'pointer', backgroundColor: '#dfc223ff', color: '#000', border: 'none', borderRadius: '5px' }}>
+                </Button>
+                <Button onClick={restartGame} style={{...btnStyle, backgroundColor: '#dfc223ff'}}>
                     Restart Game
-                </button>
+                </Button>
             </div>
         </div>
     );
