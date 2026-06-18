@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 
 function ListItem({children, listItemStyle}) {
     return(
@@ -7,6 +8,7 @@ function ListItem({children, listItemStyle}) {
 }
 
 function HowToPlay() {
+    
     const navigate = useNavigate();
 
     const handleBackToMenu = () => {
@@ -186,9 +188,9 @@ function HowToPlay() {
                     </ul>
                 </div>
 
-                <button onClick={handleBackToMenu} style={buttonStyle}>
+                <Button onClick={handleBackToMenu} style={buttonStyle}>
                     Back to Menu
-                </button>
+                </Button>
             </div>
         </div>
     );
