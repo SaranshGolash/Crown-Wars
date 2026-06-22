@@ -1,2 +1,5 @@
 node_modules
 package-lock.json
+server
+server/index.js
+server/package.json

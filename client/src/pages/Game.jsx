@@ -91,12 +91,27 @@ function Game() {
         border: 'none',
         borderRadius: '5px'
     }
+
+    let gameStatus = null;
+    if (game.isCheckmate()) {
+        gameStatus = "Checkmate!";
+    } else if (game.isDraw()) {
+        gameStatus = "Draw!";
+    }
+
     return (
         <div style={mainDivStyle}>
             <h2 style={titleStyle}>Chess Game</h2>
             <div style={{ color: 'white', marginBottom: '20px', fontSize: '1.2rem' }}>
                 You are playing as: <strong>{playerColor.charAt(0).toUpperCase() + playerColor.slice(1)}</strong>
             </div>
+            
+            {gameStatus && (
+                <div style={{ color: '#ff4444', fontSize: '2rem', fontWeight: 'bold', marginBottom: '15px' }}>
+                    {gameStatus}
+                </div>
+            )}
+
             <div style={{ width: '600px', maxWidth: '100%' }}>
                 <Chessboard 
                     position={game.fen()} 
