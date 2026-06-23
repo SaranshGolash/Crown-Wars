@@ -45,6 +45,80 @@ How do we actually play against the computer?
 
 ---
 
+## Game Coding Steps
+
+### (`client/public/index.html`)
+
+```html
+<!-- HTML Boilerplate having a div tag conntaing id of root, inside the body tag --->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Crown Wars" />
+    <title>Crown Wars</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+
+```
+
+### (`client/index.js`)
+
+```jsx
+import React from 'react'; // Mandatory react header file/library
+import ReactDOM from 'react-dom/client'; // Mandatory line of code for the same as above
+import './App.css'; // App.js has a App.css file to give relevant styling such as widhth height in body
+import App from './App'; // App is a component that has an App function to it, which gets exported in the App.js and later on used here, by importing it's properties/behaviours
+
+const root = ReactDOM.createRoot(document.getElementById('root')); // root variable having datatype const(constant i.e., cannot be altered) containg the DOM manipulation(here we are getting that particular html element/tag having id of root)
+root.render(
+  <React.StrictMode>
+    <App /> {/*rendering the root component*/}
+  </React.StrictMode>
+);
+
+```
+
+### (`client/App.js`)
+
+```jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // importing router header file for navigation of react pages
+import './App.css';
+import Main from './pages/Main'; // importing Main page elements and behaviours
+import Game from './pages/Game'; // importing game page elements and behaviours
+import HowToPlay from './pages/HowToPlay'; // importing HowToPlay page elements and behaviours
+import Credits from './pages/Credits'; // importing Credits page elements and behaviours
+import Settings from './pages/Settings'; // importing Settings page elements and behaviours
+
+function App() {
+
+  return (
+    <Router>
+      <div className="App"> {/* This here defines that the Router is setted up for the entire App component */}
+
+        <Routes> {/* This here defines the routes that are available to the client */}
+
+          <Route path="/" element={<Main />} /> {/* Routes have multiple routes to it. Every route defines a path and the element to be rendered when that path is called */} {/* The element attribute is used to specify the component that should be rendered when the route is matched */}
+          <Route path="/game" element={<Game />} />
+          <Route path="/how-to-play" element={<HowToPlay />} />
+          <Route path="/credits" element={<Credits />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App; // Remember to export the React component/page/root component. Without exporting you cannot access the properties/elements of the same.
+
+```
+
 ## 🚀 How to Run the Game Locally
 
 Want to run this on your own computer? It's super easy! Just follow these steps. 
