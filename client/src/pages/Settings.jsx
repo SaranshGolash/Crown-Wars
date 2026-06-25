@@ -46,7 +46,7 @@ function Settings() {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundImage: 'url("/chess-board.png")',
+        backgroundImage: 'url("/images/chess-board.png")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         opacity: 0.15,
