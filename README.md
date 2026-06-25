@@ -119,6 +119,302 @@ export default App; // Remember to export the React component/page/root componen
 
 ```
 
+### (`client/App.css`)
+
+```css
+:root {
+  --primary-color: #282c34;
+  --text-color: #ffffff;
+  --accent-color: #61dafb;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  min-width: 100vh;
+}
+```
+
+### (`client/src/pages/Main.jsx`)
+
+```jsx
+import { useNavigate } from 'react-router-dom'; // useNavigate hook is a built-in feature of React Router (v6+) that returns a function allowing you to navigate programmatically within your browser. Basically navigation to a desired end-point of the URL.
+
+function GameMenuList({menuItems, listStyle, handleMenuClick}) { // This is a GameMenuList component that we have to create in order to prevent repeated use of list in the Main component
+    return (
+        <ul className="game-menu-list" style={listStyle}>
+            {menuItems.map((item, index) => ( // map function can be looked to as a for loop which iterates through all the elements of the list/array where item is the value and index is the position
+                <li key={index} className="game-menu-item" style={{fontSize: '2.5rem', paddingBottom: '10px', cursor: 'pointer', width: 'fit-content', margin: '0 auto'}} onClick={() => handleMenuClick(item)}>
+                    {item}
+                </li>
+            ))}
+        </ul>
+    );
+}
+
+function Main() {
+    const navigate = useNavigate();
+
+    const handleMenuClick = (item) => { // A function that will handle the menu click having the particular item achieved via the iteration of list above
+        if(item === "New Game") {
+            navigate("/game");
+        } else if(item === "How to Play") {
+            navigate("/how-to-play");
+        } else if(item === "Settings") {
+            navigate("/settings");
+        } else if(item === "Credits") {
+            navigate("/credits");
+        }
+    };
+
+    const menuItems = [ // The list that will be sent to the GameMenuItem Component as props
+        "New Game",
+        "How to Play",
+        "Settings",
+        "Credits"
+    ];
+
+    // CSS for the Main Component and its subcomponent (GameMenuList) in the react DOM Tree
+
+    const listStyle = {
+        listStyleType: "none",
+        padding: 0,
+        margin: 0,
+        
+    }
+
+    const mainPageStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexFlow: 'column nowrap',
+        minHeight: '100vh',
+        position: 'relative'
+    };
+
+    const colors = ['#dfc223ff', '#ceb235ff', '#ffdb0fff']
+    const titleStyle = {
+        position: 'absolute',
+        top: 0,
+        paddingTop: '40px',
+        width: '100%',
+        textAlign: 'center',
+        fontSize: '3rem',
+        background: `linear-gradient(to right, ${colors[0]}, ${colors[1]}, ${colors[2]})`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginRight: '5px'
+    };
+    const bgStyle = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: 'url("/chess-board.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.15,
+        zIndex: -1
+    };
+    
+    return(
+        <div className="main-page" style={mainPageStyle}>
+            <div style={bgStyle}></div>
+            <div className="main-page-title" style={titleStyle}>
+                <h1>Crown Wars</h1>
+            </div>
+            <div>
+                <GameMenuList menuItems={menuItems} listStyle={listStyle} handleMenuClick={handleMenuClick}/> {/* Accessing the subcomponent */}
+            </div>
+        </div>
+    );
+}
+
+export default Main;
+```
+
+### (`client/src/components/Button.jsx`)
+
+```jsx
+function Button({children, onClick, style}) { // We create a reusable button component here for the reuse of it in the Button elements throughout the application. 
+    return(
+        <button onClick={onClick} style={style}>{children}</button>
+    );
+}
+
+export default Button;
+```
+
+### (`client/src/pages/Game.jsx`)
+
+```jsx
+// As discussed earlier, it is now time to use the libraries to make our game work
+import { useState, useEffect } from 'react'; // useState hook tracks local component data that triggers a UI re-render upon changing, while useEffect hook manages side effects like data fetching, manual DOM updates, and subscriptions outside the normal render flow
+import { Chessboard } from 'react-chessboard';
+import { Chess } from 'chess.js';
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
+
+function Game() {
+    const navigate = useNavigate();
+    const [game, setGame] = useState(new Chess()); // Initializes a piece of state to hold an instance of a Chess game engine
+    const [playerColor, setPlayerColor] = useState(Math.random() < 0.5 ? 'white' : 'black'); // Math.random() will randomly pick colors so that we can assign the picked color to the player
+
+    useEffect(() => {
+        if (game.isGameOver() || game.isDraw()) return; // Checkmate/Stalemate condition
+
+        function makeRandomMove() { // Fucntion to handle random moves by the computer/AI
+            const possibleMoves = game.moves();
+            if (possibleMoves.length === 0) return;
+            const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+            
+            const gameCopy = new Chess(game.fen()); // Creating a completely independent, duplicated clone of our current chess game state
+            try {
+                gameCopy.move(possibleMoves[randomIndex]);
+                setGame(gameCopy);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        const isAiTurn = (game.turn() === 'w' && playerColor === 'black') || (game.turn() === 'b' && playerColor === 'white');
+
+        if (isAiTurn) {
+            const timer = setTimeout(makeRandomMove, 300); // Important to add setTimeout since it will tell the computer/AI to wait for 300ms before moving a chess piece
+            return () => clearTimeout(timer); // If we do not clearTimeout then the logic will break and wont let the user feel the smoothness of the game
+        }
+    }, [game, playerColor]);
+
+    function makeAMove(move) {
+        const gameCopy = new Chess(game.fen());
+        try {
+            const result = gameCopy.move(move);
+            setGame(gameCopy);
+            return result;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function onDrop(sourceSquare, targetSquare) { // Function validates and executes a player's dragged chess move, returning true if successful or false if illegal or out of turn.
+
+        if (game.turn() !== playerColor[0]) return false;
+
+        const move = makeAMove({
+            from: sourceSquare,
+            to: targetSquare,
+            promotion: 'q',
+        });
+
+        if (move === null) return false;
+
+        return true;
+    }
+
+    const restartGame = () => {
+        setGame(new Chess());
+        setPlayerColor(Math.random() < 0.5 ? 'white' : 'black');
+    }
+
+    const handleBackToMenu = () => {
+        navigate('/');
+    }
+
+    const mainDivStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        minHeight: '100vh',
+        justifyContent: 'center'
+    };
+
+    const titleStyle = {
+        fontSize: '3rem',
+        color: '#ffdb0fff',
+        marginBottom: '10px'
+    };
+
+    const btnStyle = {
+        padding: '10px 20px',
+        fontSize: '1.2rem',
+        cursor: 'pointer',
+        marginRight: '10px',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '5px'
+    }
+
+    let gameStatus = null;
+    if (game.isCheckmate()) {
+        gameStatus = "Checkmate!";
+    } else if (game.isDraw()) {
+        gameStatus = "Draw!";
+    }
+
+    return (
+        <div style={mainDivStyle}>
+            <h2 style={titleStyle}>Chess Game</h2>
+            <div style={{ color: 'white', marginBottom: '20px', fontSize: '1.2rem' }}>
+                You are playing as: <strong>{playerColor.charAt(0).toUpperCase() + playerColor.slice(1)}</strong>
+            </div>
+            
+            {gameStatus && (
+                <div style={{ color: '#ff4444', fontSize: '2rem', fontWeight: 'bold', marginBottom: '15px' }}>
+                    {gameStatus}
+                </div>
+            )}
+
+            <div style={{ width: '600px', maxWidth: '100%' }}>
+                <Chessboard 
+                    position={game.fen()} 
+                    onPieceDrop={onDrop} 
+                    boardOrientation={playerColor}
+                    boardWidth={600} 
+                    customDarkSquareStyle={{ backgroundColor: '#779556' }} 
+                    customLightSquareStyle={{ backgroundColor: '#ebecd0' }} 
+                />
+            </div>
+            <div style={{ marginTop: '30px' }}>
+                <Button onClick={handleBackToMenu} style={{...btnStyle, backgroundColor: '#333'}} className='back-to-menu'>
+                    Back to Menu
+                </Button>
+                <Button onClick={restartGame} style={{...btnStyle, backgroundColor: '#dfc223ff'}}>
+                    Restart Game
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+export default Game;
+
+```
+
+### (`client/src/pages/HowToPlay.jsx`)
+
+```jsx
+
+```
+
+### (`client/src/pages/Game.jsx`)
+
+```jsx
+
+```
+
+### (`client/src/pages/Game.jsx`)
+
+```jsx
+
+```
+
 ## 🚀 How to Run the Game Locally
 
 Want to run this on your own computer? It's super easy! Just follow these steps. 
