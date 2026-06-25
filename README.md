@@ -863,6 +863,17 @@ function Credits() {
 export default Credits;
 ```
 
+### (`.gitignore`)
+
+```gitignore
+# We will ignore git adding server directory and its files for now since server updates will be made in near future
+node_modules
+package-lock.json
+server
+server/index.js
+server/package.json
+```
+
 ## 🚀 How to Run the Game Locally
 
 Want to run this on your own computer? It's super easy! Just follow these steps. 
