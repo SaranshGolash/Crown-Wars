@@ -67,7 +67,7 @@ How do we actually play against the computer?
 
 ```
 
-### (`client/index.js`)
+### (`client/src/index.js`)
 
 ```jsx
 import React from 'react'; // Mandatory react header file/library
@@ -84,7 +84,7 @@ root.render(
 
 ```
 
-### (`client/App.js`)
+### (`client/src/App.js`)
 
 ```jsx
 import React from 'react';
@@ -119,7 +119,7 @@ export default App; // Remember to export the React component/page/root componen
 
 ```
 
-### (`client/App.css`)
+### (`client/src/App.css`)
 
 ```css
 :root {
@@ -400,19 +400,467 @@ export default Game;
 ### (`client/src/pages/HowToPlay.jsx`)
 
 ```jsx
+// I hope based on previous pages and its components coding, you can now make things of I want you to map down how things work in this simple HowToPlay Page. Comment down in the Codedex Monthly Challenge Post that I put up, regarding what you understood of it.
+
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
+
+const mainPageStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexFlow: 'column nowrap',
+    minHeight: '100vh',
+    position: 'relative'
+};
+
+const titleStyle = {
+    fontSize: '3rem',
+    color: '#ffdb0fff',
+    marginBottom: '10px'
+};
+
+const bgStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundImage: 'url("/chess-board.png")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    opacity: 0.15,
+    zIndex: -1
+};
+
+const contentStyle = {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    padding: '40px',
+    borderRadius: '10px',
+    maxWidth: '800px',
+    width: '90%',
+    boxSizing: 'border-box',
+    textAlign: 'left'
+};
+
+const buttonStyle = {
+    padding: '10px 20px',
+    fontSize: '1.2rem',
+    cursor: 'pointer',
+    marginTop: '30px',
+    backgroundColor: '#dfc223ff',
+    color: '#000',
+    border: 'none',
+    borderRadius: '5px'
+};
+
+const sectionStyle = {
+    marginBottom: '25px',
+};
+
+const headingStyle = {
+    fontSize: '1.8rem',
+    color: '#ffdb0fff',
+    marginBottom: '15px',
+    borderBottom: '2px solid #dfc223ff',
+    paddingBottom: '10px'
+};
+
+const paragraphStyle = {
+    fontSize: '1.1rem',
+    lineHeight: '1.6',
+    marginBottom: '10px',
+    color: '#e0e0e0'
+};
+
+const listStyle = {
+    fontSize: '1.1rem',
+    lineHeight: '1.8',
+    paddingLeft: '20px',
+    color: '#e0e0e0'
+};
+
+const listItemStyle = {
+    marginBottom: '8px',
+    color: '#e0e0e0'
+};
+
+function ListItem({children}) {
+    return(
+        <li style={listItemStyle}>{children}</li>
+    )
+}
+
+function ListSection({title, children}) {
+    return (
+        <div style={sectionStyle}>
+            <h2 style={headingStyle}>{title}</h2>
+            <ul style={listStyle}>
+                {children}
+            </ul>
+        </div>
+    );
+}
+
+function HowToPlay() {
+    
+    const navigate = useNavigate();
+
+    const handleBackToMenu = () => {
+        navigate("/");
+    };
+
+    return (
+        <div className="how-to-play-main" style={mainPageStyle}>
+            <div style={bgStyle}></div>
+            <div className="how-to-play-content" style={contentStyle}>
+                <h1 style={titleStyle}>How to Play</h1>
+
+                <div style={sectionStyle}>
+                    <h2 style={headingStyle}>The Objective</h2>
+                    <p style={paragraphStyle}>
+                        The objective of Chess is to checkmate your opponent's King. 
+                        Checkmate occurs when the King is under immediate attack (in "check") 
+                        and there is no legal move to escape the attack.
+                    </p>
+                </div>
+
+                <ListSection title="Basic Rules">
+                    <ListItem>
+                        <strong>Setup:</strong> The board is set up with white on the right side. 
+                        The King and Queen are placed on the center squares (d1 & e1 for white, d8 & e8 for black).
+                    </ListItem>
+                    <ListItem>
+                        <strong>Turns:</strong> White always moves first. Players alternate turns, moving one piece per turn.
+                    </ListItem>
+                    <ListItem>
+                        <strong>Movement:</strong> Each piece has its own unique way of moving. 
+                        You cannot move a piece through another piece (except the Knight).
+                    </ListItem>
+                    <ListItem>
+                        <strong>Capturing:</strong> To capture an opponent's piece, move your piece to the square occupied by the opponent's piece. 
+                        The captured piece is removed from the board.
+                    </ListItem>
+                </ListSection>
+
+                <ListSection title="Piece Movements">
+                    <ListItem>
+                        <strong>Pawn:</strong> Moves one square forward (or two on its first move). Captures diagonally forward.
+                    </ListItem>
+                    <ListItem>
+                        <strong>Rook:</strong> Moves any number of squares horizontally or vertically.
+                    </ListItem>
+                    <ListItem>
+                        <strong>Knight:</strong> Moves in an 'L' shape (two squares in one direction, then one square perpendicular). 
+                        It is the only piece that can jump over other pieces.
+                    </ListItem>
+                    <ListItem>
+                        <strong>Bishop:</strong> Moves any number of squares diagonally.
+                    </ListItem>
+                    <ListItem>
+                        <strong>Queen:</strong> Combines the moves of the Rook and Bishop. 
+                        Moves any number of squares horizontally, vertically, or diagonally.
+                    </ListItem>
+                    <ListItem>
+                        <strong>King:</strong> Moves one square in any direction. 
+                        It cannot move into check (a square where it can be captured).
+                    </ListItem>
+                </ListSection>
+
+                <ListSection title="Special Moves">
+                    <ListItem>
+                        <strong>Castling:</strong> A special move involving the King and a Rook to improve king safety.
+                    </ListItem>
+                    <ListItem>
+                        <strong>En Passant:</strong> A special pawn capture that can occur immediately after an opponent's pawn moves two squares forward.
+                    </ListItem>
+                    <ListItem>
+                        <strong>Pawn Promotion:</strong> When a pawn reaches the opposite end of the board, it can be promoted to a Queen, Rook, Bishop, or Knight.
+                    </ListItem>
+                </ListSection>
+
+                <ListSection title="Ending the Game">
+                    <ListItem>
+                        <strong>Checkmate:</strong> The King is in check and cannot escape. (You Win!)
+                    </ListItem>
+                    <ListItem>
+                        <strong>Stalemate:</strong> The player whose turn it is has no legal moves, but their King is not in check. (It's a Draw!)
+                    </ListItem>
+                    <ListItem>
+                        <strong>Draw:</strong> Can also occur by agreement, threefold repetition, or insufficient material.
+                    </ListItem>
+                </ListSection>
+
+                <Button onClick={handleBackToMenu} style={buttonStyle}>
+                    Back to Menu
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+export default HowToPlay;
+```
+
+### (`client/src/utils/soundManager.js`)
+
+```jsx
+import { Howl } from 'howler'; // howler is a js library used for playing sounds.
+
+export const sounds = {
+  bgMusic: new Howl({
+    src: ['/sounds/chessbg.mp3'],
+    loop: true,
+    volume: 0.2,
+  })
+};
 
 ```
 
-### (`client/src/pages/Game.jsx`)
+### (`client/src/pages/Settings.jsx`)
 
 ```jsx
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { sounds } from "../utils/soundManager"; // Import the utility we created
+
+function Settings() {
+
+    const navigate = useNavigate();
+    const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+    useEffect(() => {
+        setIsMusicPlaying(sounds.bgMusic.playing()); // Sets to true when browser is loaded
+    }, []);
+
+    const toggleMusic = () => {
+        if (isMusicPlaying) { // If explicitly the user toggles music off then the isMusicPlaying becomes false
+            sounds.bgMusic.pause();
+            setIsMusicPlaying(false);
+        } else {
+            sounds.bgMusic.play();
+            setIsMusicPlaying(true);
+        }
+    };
+
+    const handleBackToMenu = () => {
+        navigate("/");
+    }
+
+    const mainPageStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexFlow: 'column nowrap',
+        minHeight: '100vh',
+        position: 'relative'
+    };
+
+    const titleStyle = {
+        fontSize: '3rem',
+        color: '#ffdb0fff',
+        marginBottom: '10px'
+    };
+
+    const bgStyle = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: 'url("/chess-board.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.15,
+        zIndex: -1
+    };
+
+    const contentStyle = {
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        padding: '40px',
+        borderRadius: '10px',
+        maxWidth: '800px',
+        width: '90%',
+        boxSizing: 'border-box',
+        textAlign: 'left'
+    };
+
+    const btnStyle = {
+        padding: '10px 20px',
+        fontSize: '1.2rem',
+        cursor: 'pointer',
+        marginTop: '30px',
+        backgroundColor: '#dfc223ff',
+        color: '#000',
+        border: 'none',
+        borderRadius: '5px'
+    };
+
+    return(
+        <div className="settings-main" style={mainPageStyle}>
+            <div style={bgStyle}></div>
+            <h2 style={titleStyle}>Crown Wars</h2>
+            <div className="settings-box" style={contentStyle}>
+                <h1>Settings</h1>
+                <h3>Background Music</h3>
+                <button onClick={toggleMusic} style={{...btnStyle, marginTop: '10px'}}>
+                    {isMusicPlaying ? 'Turn Off Music' : 'Turn On Music'}
+                </button>
+            </div>
+            <button onClick={handleBackToMenu} style={btnStyle}>
+                Back to Menu
+            </button>
+        </div>
+    )
+}
+
+export default Settings;
+```
+
+### (`client/src/App.js`)
+
+```jsx
+// To our previous code in App.js, we include few details regarding the utility (soundManager.js)
+
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Main from './pages/Main';
+import Game from './pages/Game';
+import HowToPlay from './pages/HowToPlay';
+import Credits from './pages/Credits';
+import Settings from './pages/Settings';
+import { sounds } from './utils/soundManager'; // importing the utility
+
+function App() {
+  useEffect(() => { // Automatically attempts to play background music on mount and falls back to a one-time user interaction listener if browser autoplay policies block it.
+
+    let hasInteracted = false;
+
+    const initAudio = () => {
+      if (hasInteracted) return;
+      hasInteracted = true;
+      
+      if (!sounds.bgMusic.playing()) {
+        sounds.bgMusic.play();
+      }
+
+      document.removeEventListener('click', initAudio);
+      document.removeEventListener('keydown', initAudio);
+    };
+
+    if (!sounds.bgMusic.playing()) {
+      sounds.bgMusic.play();
+    }
+
+    document.addEventListener('click', initAudio);
+    document.addEventListener('keydown', initAudio);
+
+    return () => {
+      document.removeEventListener('click', initAudio);
+      document.removeEventListener('keydown', initAudio);
+    };
+  }, []);
+
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/game" element={<Game />} />
+          <Route path="/how-to-play" element={<HowToPlay />} />
+          <Route path="/credits" element={<Credits />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
 
 ```
 
-### (`client/src/pages/Game.jsx`)
+### (`client/src/pages/Credits.jsx`)
 
 ```jsx
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 
+function Credits() {
+
+    const navigate = useNavigate();
+
+    const handleBackToMenu = () => {
+        navigate("/");
+    }
+    const mainPageStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexFlow: 'column nowrap',
+        minHeight: '100vh',
+        position: 'relative'
+    };
+
+    const titleStyle = {
+        fontSize: '3rem',
+        color: '#ffdb0fff',
+        marginBottom: '10px'
+    };
+
+    const bgStyle = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: 'url("/chess-board.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.15,
+        zIndex: -1
+    };
+
+    const contentStyle = {
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        padding: '40px',
+        borderRadius: '10px',
+        maxWidth: '800px',
+        width: '90%',
+        boxSizing: 'border-box',
+        textAlign: 'left'
+    };
+
+    const btnStyle = {
+        padding: '10px 20px',
+        fontSize: '1.2rem',
+        cursor: 'pointer',
+        marginTop: '30px',
+        backgroundColor: '#dfc223ff',
+        color: '#000',
+        border: 'none',
+        borderRadius: '5px'
+    };
+
+    return(
+        <div className="credits-main" style={mainPageStyle}>
+            <div style={bgStyle}></div>
+            <h2 style={titleStyle}>Crown Wars</h2>
+            <div style={contentStyle}>
+                <h1>Credits</h1>
+                <p>Made by Saransh Golash</p>
+                <br></br>
+                <p>Thanks to Codedex</p>
+            </div>
+            <Button onClick={handleBackToMenu} style={btnStyle}>
+                Back to Menu
+            </Button>
+        </div>
+    );
+}
+
+export default Credits;
 ```
 
 ## 🚀 How to Run the Game Locally
