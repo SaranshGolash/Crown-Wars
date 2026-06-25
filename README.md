@@ -7,7 +7,7 @@ This will be your friendly guide. I will walk you through exactly how this game 
 
 ## Before We Start
 
-**NOTE**: There are some prerequisties you must know basic HTML, CSS and JavaScript.
+**NOTE**: There are some prerequisties you must know basic HTML, CSS and JavaScript. Use your own images/sounds or just take it from the repository itself.
 ---
 
 ## 🛠️ What We Will Use (The Tech Stack)
@@ -217,7 +217,7 @@ function Main() {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundImage: 'url("/chess-board.png")',
+        backgroundImage: 'url("/images/chess-board.png")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         opacity: 0.15,
